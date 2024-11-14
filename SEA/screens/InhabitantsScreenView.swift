@@ -17,32 +17,44 @@ struct InhabitantsScreenView: View {
     ]
     
     var body: some View {
-        VStack {
-            HStack(spacing: 20) {
-                Group {
-                    Image(systemName: "chevron.left")
-                    Text("Inhabitants")
-                        .font(.title3)
-                }
-                .onTapGesture {
-                    presentationMode.wrappedValue.dismiss()
-                }
+        NavigationView {
+            VStack {
+                TopNavBar()
                 
-                Spacer()
-            }
-            .padding()
-            .background(.white)
-            .shadow(color: .black.opacity(0.2), radius: 7, x: 0, y: 3)
-            
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 15) {
-                    ForEach(inhabitants, id: \.self) { inhabitant in
-                        AnimalInfo(image: inhabitant.image, name: inhabitant.name, description: inhabitant.description)
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 15) {
+                        ForEach(inhabitants, id: \.self) { inhabitant in
+                            NavigationLink {
+                                InhabitantDetailScreen(image: inhabitant.image, name: inhabitant.name, description: inhabitant.description)
+                                    .navigationBarHidden(true)
+                            } label: {
+                                AnimalInfo(image: inhabitant.image, name: inhabitant.name, description: inhabitant.description)
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
+                    .padding()
                 }
-                .padding()
             }
         }
+    }
+    
+    func TopNavBar() -> some View {
+        HStack(spacing: 20) {
+            Group {
+                Image(systemName: "chevron.left")
+                Text("Inhabitants")
+                    .font(.title3)
+            }
+            .onTapGesture {
+                presentationMode.wrappedValue.dismiss()
+            }
+            
+            Spacer()
+        }
+        .padding()
+        .background(.white)
+        .shadow(color: .black.opacity(0.2), radius: 7, x: 0, y: 3)
     }
     
     func AnimalInfo(image: String, name: String, description: String) -> some View {
