@@ -10,26 +10,28 @@ import SwiftUI
 struct HomeScreenView: View {
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack {
-                HStack {
-                    Spacer()
-                    Image(.logo)
-                    Spacer()
-                    Image(.notification)
+        NavigationView {
+            ScrollView(showsIndicators: false) {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Image(.logo)
+                        Spacer()
+                        Image(.notification)
+                    }
+                    .padding(.horizontal)
+                    
+                    SliderView()
+                    ActivityPanelView()
+                    
+                    HStack(spacing: 20) {
+                        VisitPreparationCard(.ticket, info: "There aren't any yet.", state: "Retrieve here")
+                        VisitPreparationCard(.parkHours, info: "Today, 13 Feb 10am - 5pm", state: "Plan my visit")
+                    }
+                    .padding(.horizontal, 25)
+                    
+                    UpcomingShows()
                 }
-                .padding(.horizontal)
-                
-                SliderView()
-                ActivityPanelView()
-                
-                HStack(spacing: 20) {
-                    VisitPreparationCard(.ticket, info: "There aren't any yet.", state: "Retrieve here")
-                    VisitPreparationCard(.parkHours, info: "Today, 13 Feb 10am - 5pm", state: "Plan my visit")
-                }
-                .padding(.horizontal, 25)
-                
-                UpcomingShows()
             }
         }
     }
@@ -42,7 +44,14 @@ struct HomeScreenView: View {
             GridItem(.flexible(minimum: 50)),
         ], spacing: 10) {
             ForEach(Activity.allCases, id: \.self) { item in
-                ActivityButton(icon: item.icon, title: item.rawValue)
+                NavigationLink {
+                    InhabitantsScreenView()
+                        .navigationBarHidden(true)
+                } label: {
+                    ActivityButton(icon: item.icon, title: item.rawValue)
+                }
+                .buttonStyle(.plain)
+                .disabled(item == .inhabitants ? false : true)
             }
         }
         .padding()
